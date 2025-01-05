@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - KTMB Maintenance Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="src/logo_miniktm.png" alt="KTMB Logo">
+            <h1>KERETAPI TANAH MELAYU BERHAD</h1>
+        </div>
+    </header>
+
+    <section class="form-container">
+        <h1>Register Your Account</h1>
+        <form action="register.php" method="POST">
+            <div class="form-group">
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="idnumber">ID Number:</label>
+                <input type="text" id="idnumber" name="idnumber" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role">
+                    <option value="admin">Admin</option>
+                    <option value="staff">Staff</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required onkeyup="checkPasswordStrength()">
+                <div id="password-strength" class="strength-indicator"></div>
+                <div id="password-suggestions" class="suggestions-box"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required onkeyup="checkPasswordMatch()">
+                <div id="password-match" class="match-indicator"></div>
+            </div>
+
+            <button type="submit" id="signup-button" class="form-button" disabled>Sign Up</button>
+        </form>
+
+        <p>Already have an account? <a href="login.html">Login here</a>.</p>
+    </section>
+
+    <script>
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const signupButton = document.getElementById('signup-button');
+            const strengthIndicator = document.getElementById('password-strength');
+            const suggestionsBox = document.getElementById('password-suggestions');
+
+            // Regular expressions for password validation
+            const uppercaseRegex = /[A-Z]/;
+            const lowercaseRegex = /[a-z]/;
+            const numberRegex = /[0-9]/;
+            const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+            let strength = 0;
+            let suggestions = [];
+
+            if (password.length >= 8) {
+                strength++;
+            } else {
+                suggestions.push("Password must be at least 8 characters long.");
+            }
+
+            if (uppercaseRegex.test(password)) {
+                strength++;
+            } else {
+                suggestions.push("Add at least one uppercase letter.");
+            }
+
+            if (lowercaseRegex.test(password)) {
+                strength++;
+            } else {
+                suggestions.push("Add at least one lowercase letter.");
+            }
+
+            if (numberRegex.test(password)) {
+                strength++;
+            } else {
+                suggestions.push("Add at least one number.");
+            }
+
+            if (specialCharRegex.test(password)) {
+                strength++;
+            } else {
+                suggestions.push("Add at least one special character.");
+            }
+
+            // Display the password strength
+            let strengthText;
+            switch (strength) {
+                case 0:
+                case 1:
+                    strengthText = "Very Weak";
+                    strengthIndicator.style.color = "red";
+                    signupButton.disabled = true;
+                    break;
+                case 2:
+                    strengthText = "Weak";
+                    strengthIndicator.style.color = "orange";
+                    signupButton.disabled = true;
+                    break;
+                case 3:
+                    strengthText = "Moderate";
+                    strengthIndicator.style.color = "yellow";
+                    signupButton.disabled = true;
+                    break;
+                case 4:
+                    strengthText = "Strong";
+                    strengthIndicator.style.color = "lightgreen";
+                    break;
+                case 5:
+                    strengthText = "Very Strong";
+                    strengthIndicator.style.color = "green";
+                    break;
+            }
+
+            strengthIndicator.textContent = "Strength: " + strengthText;
+            suggestionsBox.innerHTML = "<strong>Suggestions:</strong><br>" + suggestions.join("<br>");
+            checkPasswordMatch();
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const signupButton = document.getElementById('signup-button');
+            const matchIndicator = document.getElementById('password-match');
+
+            if (password === confirmPassword && password.length > 0) {
+                matchIndicator.textContent = "Passwords match!";
+                matchIndicator.style.color = "green";
+                signupButton.disabled = false;
+            } else {
+                matchIndicator.textContent = "Passwords do not match.";
+                matchIndicator.style.color = "red";
+                signupButton.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
